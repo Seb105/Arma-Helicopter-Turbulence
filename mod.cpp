@@ -1,0 +1,10 @@
+name = "Helicopter Turbulence";
+dir = "HT";
+author = "Seb";
+actionName = "Website";
+action = "http://www.carpenoctem.co";
+description = "Github: https://github.com/Seb105/Arma-Helicopter-Turbulence";
+tooltip = "Helicopter Turbulence";
+tooltipOwned = "Helicopter Turbulence Owned";
+overview = "Adds dynamic turbulence to helicopters based on their size, mass and the weather!";
+overviewText = "Helicopter Turbulence Overview";

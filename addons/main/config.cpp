@@ -15,7 +15,7 @@ class CfgPatches {
 class CfgFunctions {
     class HT {
         class Helicopter_Turbulence {
-            class turbulence {file = "z\HT\addons\main\functions\fn_turbulence.sqf";};
+            class turbulence {file = "\z\HT\addons\main\functions\fn_turbulence.sqf"};
         };
     };
 };

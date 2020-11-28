@@ -1,2 +1,2 @@
-hemtt.exe init
-hemtt.exe template init
+hemtt init
+hemtt template init

@@ -1,1 +1,1 @@
-hemtt.exe build
+hemtt build

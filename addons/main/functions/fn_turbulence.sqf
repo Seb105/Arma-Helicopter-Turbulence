@@ -1,3 +1,5 @@
+#include "script_component.hpp"
+
 params ["_vehicle"];
 private _FNC_master = {
 	params ["_vehicle"];

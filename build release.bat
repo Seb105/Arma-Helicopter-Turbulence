@@ -1,1 +1,1 @@
-hemtt.exe build --release
+hemtt build --release
