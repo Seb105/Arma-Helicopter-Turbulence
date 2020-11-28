@@ -25,17 +25,17 @@ private _FNC_master = {
 	private _frontBackFaceArea = 	_maxWidth * _maxHeight;
 	private _topBottomFaceArea = 	_maxWidth * _maxLength;
 	// assume a spherical cow in a vacuum
-	// average surface area of the aircraft facing wind, then also divided by 3 as boundingBoxReal returns values generally much larger than actual dimensions of the aircraft.
+	// average surface area of the aircraft facing wind, then also divided by 2 as boundingBoxReal returns values generally much larger than actual dimensions of the aircraft.
 	private _surfaceArea = (_LRsideFaceArea + _frontBackFaceArea +_topBottomFaceArea)/(3*3);
 
 	private _FNC_turbulence = {
 		params ["_vehicle","_dimensions","_surfaceArea"];
 		if (_vehicle getVariable "TURBULENCE_STAGE" >= 1) then {
 			_vehicle setVariable ["TURBULENCE_STAGE",0];
-			// 10 = 10m/s+2 airspeed at max wind and overcast
-			private _maxWindSpeed = (((windStr+overcast)/2) * 10)+2;
+			// 18 = 18m/s+2 airspeed at max wind and overcast
+			private _maxWindSpeed = (((windStr+overcast)/2) * 18)+2;
 			private _gustSpeed = [2,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
-			private _gustLength = [0.3,1,random(1)] call BIS_fnc_easeIn;
+			private _gustLength = [0.2,0.8,random(1)] call BIS_fnc_easeIn;
 
 			// wind pressure per m^2 = (0.5*density of air*airVelocity^2)/2. This approximates air density as 1.2 when it does depend on the temp and altitude
 			private _gustPressure = (0.5*1.2*(_gustSpeed*_gustSpeed))/2;
@@ -90,7 +90,7 @@ private _FNC_master = {
 	0.05 //Physics update rate.
 	,[_FNC_turbulence,_vehicle,_dimensions,_surfaceArea]] call CBA_fnc_addPerFrameHandler;
 };
-
+// add event handler for getting into a helicopter
 [_vehicle, "getIn", {
 	params ["_vehicle", "_role", "_unit", "_turret"];
 	private _FNC_master = _thisArgs;
@@ -98,3 +98,8 @@ private _FNC_master = {
 		_vehicle call _FNC_master;
 	}
 },_FNC_master] call CBA_fnc_addBISEventHandler;
+
+// if the player starts mission in a helicopter, start turbulence.
+if (_vehicle = vehicle player) then {
+	_vehicle call _FNC_master;
+};

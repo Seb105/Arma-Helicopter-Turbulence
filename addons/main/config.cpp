@@ -11,13 +11,12 @@ class CfgPatches {
         VERSION_CONFIG;
     };
 };
-
 class CfgFunctions {
     class HT {
         class Helicopter_Turbulence {
-            class turbulence {file = "\z\HT\addons\main\functions\fn_turbulence.sqf"};
+            file = "z\HT\addons\main\functions";
+            class turbulence {};
         };
     };
 };
-
 #include "CfgEventHandlers.hpp"
