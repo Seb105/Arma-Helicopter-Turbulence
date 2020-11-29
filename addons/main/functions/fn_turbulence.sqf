@@ -1,6 +1,10 @@
 #include "script_component.hpp"
 
 params ["_vehicle"];
+//check not called twice
+if (_vehicle getVariable ["TURBULENCE_INITIALSIED",false]) exitWith {};
+_vehicle setVariable ["TURBULENCE_INITIALSIED",true];
+//master function
 private _FNC_master = {
 	params ["_vehicle"];
 	// init some vars that need to be interpolated from.
@@ -34,14 +38,15 @@ private _FNC_master = {
 			_vehicle setVariable ["TURBULENCE_STAGE",0];
 			
 			private _windiness = (windStr+overcast)/2;
-			// 20 = 20m/s max windspeed at max rain and overcast
-			private _maxWindSpeed = (_windiness*25);
+			// 30 = 30m/s max windspeed at max rain and overcast
+			private _maxWindSpeed = (_windiness*30);
 			// easeIn is more likely to select a low value, so big gusts are rare
-			private _gustSpeed = [5,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
+			private _gustSpeed = [10,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
 			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
 			private _minGustLength = [0.4,0.1,_windiness] call BIS_fnc_lerp;
+			private _maxGustLength = [1,0.7,_windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
-			private _gustLength = [_minGustLength,0.8,random(1)] call BIS_fnc_easeInOut;
+			private _gustLength = [_minGustLength,_maxGustLength,random(1)] call BIS_fnc_easeInOut;
 
 			// wind pressure per m^2 = (0.5*density of air*airVelocity^2)/2. This approximates air density as 1.2 when it does depend on the temp and altitude
 			private _gustPressure = (0.5*1.2*(_gustSpeed*_gustSpeed))/2;
@@ -62,6 +67,7 @@ private _FNC_master = {
 					private _progress = _i/_gustLength;
 					private _forceN = [_oldForce,_force,_progress] call BIS_fnc_easeInOutVector;
 					private _turbulenceCentreN = [_oldCentre,_turbulenceCentre,_progress] call BIS_fnc_easeInOutVector;
+					systemchat str _forceN;
 					_vehicle addForce [
 						_forceN,
 						_turbulenceCentre
