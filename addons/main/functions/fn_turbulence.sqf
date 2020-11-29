@@ -4,6 +4,7 @@ params ["_vehicle"];
 //check not called twice
 if (_vehicle getVariable ["TURBULENCE_INITIALSIED",false]) exitWith {};
 _vehicle setVariable ["TURBULENCE_INITIALSIED",true];
+
 //master function
 private _FNC_master = {
 	params ["_vehicle"];
@@ -43,8 +44,8 @@ private _FNC_master = {
 			// easeIn is more likely to select a low value, so big gusts are rare
 			private _gustSpeed = [10,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
 			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
-			private _minGustLength = [0.4,0.1,_windiness] call BIS_fnc_lerp;
-			private _maxGustLength = [1,0.7,_windiness] call BIS_fnc_lerp;
+			private _minGustLength = [0.6,0.3,_windiness] call BIS_fnc_lerp;
+			private _maxGustLength = [0.9,0.8,_windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
 			private _gustLength = [_minGustLength,_maxGustLength,random(1)] call BIS_fnc_easeInOut;
 
@@ -67,7 +68,6 @@ private _FNC_master = {
 					private _progress = _i/_gustLength;
 					private _forceN = [_oldForce,_force,_progress] call BIS_fnc_easeInOutVector;
 					private _turbulenceCentreN = [_oldCentre,_turbulenceCentre,_progress] call BIS_fnc_easeInOutVector;
-					systemchat str _forceN;
 					_vehicle addForce [
 						_forceN,
 						_turbulenceCentre
