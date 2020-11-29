@@ -32,10 +32,16 @@ private _FNC_master = {
 		params ["_vehicle","_dimensions","_surfaceArea"];
 		if (_vehicle getVariable "TURBULENCE_STAGE" >= 1) then {
 			_vehicle setVariable ["TURBULENCE_STAGE",0];
-			// 18 = 18m/s+2 airspeed at max wind and overcast
-			private _maxWindSpeed = (((windStr+overcast)/2) * 18)+2;
-			private _gustSpeed = [2,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
-			private _gustLength = [0.2,0.8,random(1)] call BIS_fnc_easeIn;
+			
+			private _windiness = (windStr+overcast)/2;
+			// 20 = 20m/s max windspeed at max rain and overcast
+			private _maxWindSpeed = (_windiness*20);
+			// easeIn is more likely to select a low value, so big gusts are rare
+			private _gustSpeed = [3,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
+			// as it gets windier, the minimum gust length decreases so you can get more short jerks
+			private _minGustLength = [0.5,0.1,_windiness] call BIS_fnc_lerp;
+			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
+			private _gustLength = [_minGustLength,1,random(1)] call BIS_fnc_easeInOut;
 
 			// wind pressure per m^2 = (0.5*density of air*airVelocity^2)/2. This approximates air density as 1.2 when it does depend on the temp and altitude
 			private _gustPressure = (0.5*1.2*(_gustSpeed*_gustSpeed))/2;
@@ -77,8 +83,8 @@ private _FNC_master = {
 		_this#0 params ["_FNC_turbulence","_vehicle","_dimensions","_surfaceArea"];
 		// if player is no longer in vehicle, remove per frame event handler.
 		if (vehicle player == _vehicle) then {
-			// if player is the Pilot and also the game is not paused, cause turbulence.
-			if (driver _vehicle == player && !isGamePaused) then {
+			// if player is the Pilot and  game is not paused and Rotorlib Advanced Flight Model is NOT enabled and vehicle engine is on, cause turbulence.
+			if (driver _vehicle == player && !isGamePaused && !difficultyEnabledRTD && isEngineOn _vehicle) then {
 				[_vehicle,_dimensions,_surfaceArea] call _FNC_turbulence;
 			};
 
@@ -100,6 +106,6 @@ private _FNC_master = {
 },_FNC_master] call CBA_fnc_addBISEventHandler;
 
 // if the player starts mission in a helicopter, start turbulence.
-if (_vehicle = vehicle player) then {
+if (_vehicle == vehicle player) then {
 	_vehicle call _FNC_master;
 };
