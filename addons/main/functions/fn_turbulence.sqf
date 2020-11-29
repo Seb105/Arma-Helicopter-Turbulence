@@ -35,13 +35,13 @@ private _FNC_master = {
 			
 			private _windiness = (windStr+overcast)/2;
 			// 20 = 20m/s max windspeed at max rain and overcast
-			private _maxWindSpeed = (_windiness*20);
+			private _maxWindSpeed = (_windiness*25);
 			// easeIn is more likely to select a low value, so big gusts are rare
 			private _gustSpeed = [3,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
-			// as it gets windier, the minimum gust length decreases so you can get more short jerks
+			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
 			private _minGustLength = [0.5,0.1,_windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
-			private _gustLength = [_minGustLength,1,random(1)] call BIS_fnc_easeInOut;
+			private _gustLength = [_minGustLength,0.8,random(1)] call BIS_fnc_easeInOut;
 
 			// wind pressure per m^2 = (0.5*density of air*airVelocity^2)/2. This approximates air density as 1.2 when it does depend on the temp and altitude
 			private _gustPressure = (0.5*1.2*(_gustSpeed*_gustSpeed))/2;
