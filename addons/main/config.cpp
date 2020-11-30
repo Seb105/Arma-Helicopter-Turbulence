@@ -6,11 +6,12 @@ class CfgPatches {
         units[] = {};
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
-        requiredAddons[] = {};
+        requiredAddons[] = {"cba_main"};
         author = "Seb";
         VERSION_CONFIG;
     };
 };
+
 class CfgFunctions {
     class HT {
         class Helicopter_Turbulence {
@@ -19,4 +20,5 @@ class CfgFunctions {
         };
     };
 };
+
 #include "CfgEventHandlers.hpp"
