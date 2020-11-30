@@ -7,6 +7,7 @@ _vehicle setVariable ["TURBULENCE_INITIALSIED",true];
 
 //master function
 private _FNC_master = {
+	if !(TURBULENCE_ENABLE_MASTER) exitWith{};
 	params ["_vehicle"];
 	// init some vars that need to be interpolated from.
 	_vehicle setVariable ["TURBULENCE_STAGE",1];
@@ -26,26 +27,32 @@ private _FNC_master = {
 	private _dimensions = [_maxWidth,_maxLength,_maxHeight];	
 
 	// calculate 3 surface areas: each side, front and back, and top and bottom.
+	/*
 	private _LRsideFaceArea = 		_maxLength * _maxHeight;
 	private _frontBackFaceArea = 	_maxWidth * _maxHeight;
 	private _topBottomFaceArea = 	_maxWidth * _maxLength;
+	*/
+
 	// assume a spherical cow in a vacuum
-	// average surface area of the aircraft facing wind, then also divided by 2 as boundingBoxReal returns values generally much larger than actual dimensions of the aircraft.
-	private _surfaceArea = (_LRsideFaceArea + _frontBackFaceArea +_topBottomFaceArea)/(3*3);
+	// average surface area of the aircraft facing wind, this uses 2.5*height*length. This approximates the aircraft as a cuboid.
+	// This is better than length*width*height because width includes the rotor, which blows surface area out of proportion.
+	private _surfaceArea = (2.5*_maxLength*_maxHeight)/(3);
 
 	private _FNC_turbulence = {
 		params ["_vehicle","_dimensions","_surfaceArea"];
 		if (_vehicle getVariable "TURBULENCE_STAGE" >= 1) then {
 			_vehicle setVariable ["TURBULENCE_STAGE",0];
-			
-			private _windiness = (windStr+overcast)/2;
+			private _windiness = 0;
+			if (TURBULENCE_ENABLE_WEATHEREFFECT) then {
+				_windiness = (windStr+overcast)/2;
+			};
 			// 30 = 30m/s max windspeed at max rain and overcast
-			private _maxWindSpeed = (_windiness*30);
+			private _maxWindSpeed = (_windiness*TURBULENCE_MAX_TURBULENCE);
 			// easeIn is more likely to select a low value, so big gusts are rare
-			private _gustSpeed = [10,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
+			private _gustSpeed = [TURBULENCE_MIN_TURBULENCE,_maxWindSpeed,random(1)] call BIS_fnc_easeIn;
 			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
-			private _minGustLength = [0.6,0.3,_windiness] call BIS_fnc_lerp;
-			private _maxGustLength = [0.9,0.8,_windiness] call BIS_fnc_lerp;
+			private _minGustLength = [0.6,0.4,_windiness] call BIS_fnc_lerp;
+			private _maxGustLength = [0.9,0.7,_windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
 			private _gustLength = [_minGustLength,_maxGustLength,random(1)] call BIS_fnc_easeInOut;
 
@@ -56,7 +63,7 @@ private _FNC_master = {
 			// selects a point on the hull for force the force to be applied.
 			private _turbulenceCentre  = _dimensions apply {(random(_x)-(_x/2))};
 			// force direction. Pick random direction use gustforcescalar as magnitude.
-			private _force = _vehicle vectorModelToWorld ([_gustForceScalar,random(360),random(360)] call CBA_fnc_polar2Vect);
+			private _force = [_gustForceScalar,random(360),random(360)] call CBA_fnc_polar2Vect;
 		
 			// old forces used for interpolation
 			private _oldForce = _vehicle getVariable "TURBULENCE_OLD_FORCE";
@@ -66,11 +73,12 @@ private _FNC_master = {
 				[{
 					params ["_vehicle","_force","_turbulenceCentre","_i","_gustLength","_oldForce","_oldCentre"];
 					private _progress = _i/_gustLength;
+					//  private _forceN = [_oldForce,_force,_progress] call BIS_fnc_easeInOutVector;
 					private _forceN = [_oldForce,_force,_progress] call BIS_fnc_easeInOutVector;
 					private _turbulenceCentreN = [_oldCentre,_turbulenceCentre,_progress] call BIS_fnc_easeInOutVector;
 					_vehicle addForce [
-						_forceN,
-						_turbulenceCentre
+						(_vehicle vectorModelToWorld _forceN),
+						_turbulenceCentreN
 					];
 				}, [_vehicle,_force,_turbulenceCentre,_i,_gustLength,_oldForce,_oldCentre],_i] call CBA_fnc_waitAndExecute;
 			};
