@@ -7,7 +7,7 @@ ADDON = false;
 	["Enable Turbulence","Default: Enabled. Enables turbulence system. Requires getting in & out of aircraft for change to take effect."],
 	"Helicopter Turbulence",
 	true,
-	1
+	0
 ] call CBA_fnc_addSetting;
 [
 	"TURBULENCE_ENABLE_WEATHEREFFECT",
@@ -15,7 +15,7 @@ ADDON = false;
 	["Enable Weather Effects","Default: Enabled. Enables or disables whether weather has an effect on turbulence. When disabled, the minimum turbulence value is used."],
 	"Helicopter Turbulence",
 	true,
-	1
+	0
 ] call CBA_fnc_addSetting;
 [
 	"TURBULENCE_MIN_TURBULENCE",
@@ -23,7 +23,7 @@ ADDON = false;
 	["Minimum Turbulence","Default: 7.5. Set the minimum turbulence during calm weather. Setting this to be above the max turbulence causes strange behaviour."],
 	"Helicopter Turbulence",
 	[0,30,7.5,1],
-	1
+	0
 ] call CBA_fnc_addSetting;
 [
 	"TURBULENCE_MAX_TURBULENCE",
@@ -31,6 +31,16 @@ ADDON = false;
 	["Maximum Turbulence","Default: 30. Set the max turbulence during the most severe weather. Setting this to be below the minimum turbulence causes strange behaviour."],
 	"Helicopter Turbulence",
 	[0,60,30,1],
-	1
+	0
+] call CBA_fnc_addSetting;
+[
+	"TURBULENCE_ENABLE_PLANES",
+	"CHECKBOX",
+	["Enable Plane Turbulence","Default: Disabled. Enables turbulence system for planes. Requires mission restart."],
+	["Helicopter Turbulence","Experimental"],
+	false,
+	0,
+	{},
+	true
 ] call CBA_fnc_addSetting;
 ADDON = true;
