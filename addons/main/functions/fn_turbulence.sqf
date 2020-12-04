@@ -54,8 +54,8 @@ private _FNC_master = {
 			private _gustSpeed = [TURBULENCE_MIN_TURBULENCE, _maxWindSpeed, random(1)] call BIS_fnc_easeIn;
 
 			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
-			private _minGustLength = [0.6, 0.3, _windiness] call BIS_fnc_lerp;
-			private _maxGustLength = [0.9, 0.4, _windiness] call BIS_fnc_lerp;
+			private _minGustLength = [0.6, 0.4, _windiness] call BIS_fnc_lerp;
+			private _maxGustLength = [0.9, 0.7, _windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
 			private _gustLength = [_minGustLength, _maxGustLength, random(1)] call BIS_fnc_easeInOut;
 
@@ -72,17 +72,18 @@ private _FNC_master = {
 			private _oldForce = _vehicle getVariable "TURBULENCE_OLD_FORCE";
 			private _oldCentre = _vehicle getVariable "TURBULENCE_OLD_CENTRE";
 
-			// DEBUG
+			/*/ DEBUG
 			if (isNull TURBULENCE_DEBUG_STARTED) then {
 				TURBULENCE_DEBUG_ARRAY_ALL = [];
 				TURBULENCE_DEBUG_STARTED = true;
 				TURBULENCE_DEBUG_TIME = 0;
 			};
 			TURBULENCE_DEBUG_TIME = TURBULENCE_DEBUG_TIME + _gustLength;
-			private _DebugArrayThisLoop = [TURBULENCE_DEBUG_TIME,_windiness,_force, _turbulenceCentre,_gustForceScalar];
+			private _surfaceAreaToMassRatio = _surfaceArea/(getmass _vehicle);
+			private _DebugArrayThisLoop = [TURBULENCE_DEBUG_TIME, _gustLength, _surfaceAreaToMassRatio, _windiness, _force, _turbulenceCentre,_gustForceScalar];
 			systemchat str _DebugArrayThisLoop;
 			TURBULENCE_DEBUG_ARRAY_ALL pushback _DebugArrayThisLoop;
-			copyToClipboard TURBULENCE_DEBUG_ARRAY_ALL;
+			copyToClipboard str TURBULENCE_DEBUG_ARRAY_ALL;
 			/**/
 			// waitAndExecute queues all the physics updates based on t/gust length.
 			for "_i" from 0 to _gustLength step 0.05 do {
