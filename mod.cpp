@@ -8,3 +8,6 @@ tooltip = "Helicopter Turbulence";
 tooltipOwned = "Helicopter Turbulence Owned";
 overview = "Adds dynamic turbulence to helicopters based on their size, mass and the weather!";
 overviewText = "Helicopter Turbulence Overview";
+logoSmall	 = "logoSmall.paa";	// Display next to the item added by the mod
+logo		 = "logo.paa";			// Logo displayed in the main menu
+logoOver	 = "logoOver.paa";	

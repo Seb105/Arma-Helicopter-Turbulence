@@ -1,8 +1,23 @@
 #include "script_component.hpp"
-[] spawn {
+0 spawn {
 	if (!hasInterface) exitWith {};
 	waitUntil {!isNull player};
-	["Helicopter", "InitPost", {
-		_this call HT_fnc_turbulence;
-	},true,[],true] call CBA_fnc_addClassEventHandler;
+	// checks if experimental plane feature is enabled. Adds for all Air if true, just Helos and VTOLs if false.
+	if (TURBULENCE_ENABLE_PLANES) then {
+		["Air", "InitPost", {
+			_this call HT_fnc_turbulence;
+		},true,[],true] call CBA_fnc_addClassEventHandler;
+	
+
+	} else {
+
+		["VTOL_Base_F", "InitPost", {
+			_this call HT_fnc_turbulence;
+		},true,[],true] call CBA_fnc_addClassEventHandler;
+
+		["Helicopter", "InitPost", {
+			_this call HT_fnc_turbulence;
+		},true,[],true] call CBA_fnc_addClassEventHandler;
+
+	};
 };
