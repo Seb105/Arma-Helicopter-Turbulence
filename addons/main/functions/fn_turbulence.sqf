@@ -55,7 +55,7 @@ private _FNC_master = {
 
 			// as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
 			private _minGustLength = [0.6, 0.4, _windiness] call BIS_fnc_lerp;
-			private _maxGustLength = [0.9, 0.7, _windiness] call BIS_fnc_lerp;
+			private _maxGustLength = [0.7, 0.6, _windiness] call BIS_fnc_lerp;
 			// easeInOut is more likely to pick middling values, so big and small gusts are slightly less common.
 			private _gustLength = [_minGustLength, _maxGustLength, random(1)] call BIS_fnc_easeInOut;
 
@@ -106,7 +106,7 @@ private _FNC_master = {
 			[{
 				params ["_vehicle"];
 				_vehicle setVariable ["TURBULENCE_STAGE", 1];
-			}, [_vehicle], _gustLength] call CBA_fnc_waitandExecute;
+			}, [_vehicle], _gustLength - 0.05] call CBA_fnc_waitandExecute;
 		};
 	};
 
