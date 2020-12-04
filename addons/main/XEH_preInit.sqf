@@ -20,17 +20,17 @@ ADDON = false;
 [
 	"TURBULENCE_MIN_TURBULENCE",
 	"SLIDER",
-	["Minimum Turbulence","Set the minimum turbulence during calm weather. Setting this to be above the max turbulence causes strange behaviour."],
+	["Minimum Turbulence","Set the minimum turbulence during calm weather. This number is also ADDED to the maximum turbulence"],
 	"Helicopter Turbulence",
-	[0,10,5,1],
+	[0,10,3,1],
 	0
 ] call CBA_fnc_addSetting;
 [
 	"TURBULENCE_MAX_TURBULENCE",
 	"SLIDER",
-	["Maximum Turbulence","Set the max turbulence during the most severe weather. Setting this to be below the minimum turbulence causes strange behaviour."],
+	["Maximum Turbulence","Set the max turbulence during the most severe weather. The minimum turbulence value is also ADDED to this number."],
 	"Helicopter Turbulence",
-	[0,40,20,1],
+	[0,40,15,1],
 	0
 ] call CBA_fnc_addSetting;
 [

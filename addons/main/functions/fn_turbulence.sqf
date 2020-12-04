@@ -49,7 +49,7 @@ private _FNC_master = {
 			// if weather effect is enabled in settings, easeIn to windiness value so that lower windiness/gustiness values have less of an effect.
 			private _windiness = [0, [0, 1, (windStr+overcast)/2] call BIS_fnc_easeIn] select TURBULENCE_ENABLE_WEATHEREFFECT;
 			// 30 = 30m/s max windspeed at max rain and overcast
-			private _maxWindSpeed = (_windiness*TURBULENCE_MAX_TURBULENCE);
+			private _maxWindSpeed = (_windiness*TURBULENCE_MAX_TURBULENCE)+TURBULENCE_MIN_TURBULENCE;
 			// easeIn is more likely to select a low value, so big gusts are rare
 			private _gustSpeed = [TURBULENCE_MIN_TURBULENCE, _maxWindSpeed, random(1)] call BIS_fnc_easeIn;
 
@@ -106,7 +106,7 @@ private _FNC_master = {
 			[{
 				params ["_vehicle"];
 				_vehicle setVariable ["TURBULENCE_STAGE", 1];
-			}, [_vehicle], _gustLength - 0.05] call CBA_fnc_waitandExecute;
+			}, [_vehicle], _gustLength] call CBA_fnc_waitandExecute;
 		};
 	};
 
