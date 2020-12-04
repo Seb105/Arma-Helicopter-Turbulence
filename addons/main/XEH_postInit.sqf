@@ -7,12 +7,13 @@
 		["Air", "InitPost", {
 			_this call HT_fnc_turbulence;
 		},true,[],true] call CBA_fnc_addClassEventHandler;
+	
+
+	} else {
 		
 		["VTOL_Base_F ", "InitPost", {
 			_this call HT_fnc_turbulence;
 		},true,[],true] call CBA_fnc_addClassEventHandler;
-
-	} else {
 
 		["Helicopter", "InitPost", {
 			_this call HT_fnc_turbulence;

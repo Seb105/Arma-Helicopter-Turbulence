@@ -72,7 +72,7 @@ private _FNC_master = {
 			private _oldForce = _vehicle getVariable "TURBULENCE_OLD_FORCE";
 			private _oldCentre = _vehicle getVariable "TURBULENCE_OLD_CENTRE";
 
-			/*/ DEBUG
+			// DEBUG
 			if (isNull TURBULENCE_DEBUG_STARTED) then {
 				TURBULENCE_DEBUG_ARRAY_ALL = [];
 				TURBULENCE_DEBUG_STARTED = true;
