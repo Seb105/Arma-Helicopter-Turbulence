@@ -17,6 +17,7 @@ class CfgFunctions {
         class Helicopter_Turbulence {
             file = "z\HT\addons\main\functions";
             class turbulence {};
+            class turbLogic {};
         };
     };
 };
