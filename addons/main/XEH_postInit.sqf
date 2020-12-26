@@ -11,7 +11,8 @@
 	}] call CBA_fnc_addPlayerEventHandler;
 
 	// if player starts in vehicle
-	if ((vehicle player) isKindof "VTOL_Base_F" OR (vehicle player) isKindof "Helicopter") then {
-		(vehicle player) call Helicopter_Turbulence_fnc_turbulence;
+	private _controlledVehicle = vehicle (call CBA_fnc_currentUnit);
+	if (_controlledVehicle isKindof "VTOL_Base_F" OR _controlledVehicle isKindof "Helicopter") then {
+		_controlledVehicle call Helicopter_Turbulence_fnc_turbulence;
 	};
 };
