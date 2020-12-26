@@ -11,16 +11,16 @@
  * NONE
  *
  * Example:
- * vehicle call HT_fnc_turbulence;
+ * vehicle call Helicopter_Turbulence_fnc_turbulence;
  *
  * Public: No
  */
 params ["_vehicle"];
-if !(TURBULENCE_ENABLE_MASTER) exitWith{};
+if !(HELICOPTER_TURBULENCE_ENABLE_MASTER) exitWith{};
 // init some vars that need to be interpolated from.
-_vehicle setVariable ["TURBULENCE_READY", true];
-_vehicle setVariable ["TURBULENCE_OLD_FORCE", [0, 0, 0]];
-_vehicle setVariable ["TURBULENCE_OLD_CENTRE", [0, 0, 0]];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_READY", true];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_FORCE", [0, 0, 0]];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_CENTRE", [0, 0, 0]];
 
 // boundingBoxReal approximates the xyz dimensions of aircraft. Generally returns much larger than actual dimensions
 private _bbr = 2 boundingBoxReal _vehicle;
@@ -37,15 +37,18 @@ private _surfaceArea = (2*pi*(_maxHeight/2)*_maxLength + 2*pi*(_maxHeight/2)^2)/
 
 [{
 	_this#0 params ["_vehicle", "_dimensions", "_surfaceArea"];
-	_currentUnit = call CBA_fnc_currentUnit;
-	// if player is no longer in vehicle, remove per frame event handler.
+	private _currentUnit = call CBA_fnc_currentUnit;
+	// if player is no longer in vehicle, remove per frame event handler and undeclare variables
 	if (vehicle _currentUnit == _vehicle) then {
 		// if player is the Pilot and  game is not paused and Rotorlib Advanced Flight Model is NOT enabled and vehicle engine is on, cause turbulence.
-		if (driver _vehicle == _currentUnit && _vehicle getVariable "TURBULENCE_READY") then {
-			[_vehicle, _dimensions, _surfaceArea] call HT_fnc_turbLogic;
+		if (driver _vehicle == _currentUnit && _vehicle getVariable "HELICOPTER_TURBULENCE_READY") then {
+			[_vehicle, _dimensions, _surfaceArea] call Helicopter_Turbulence_fnc_turbLogic;
 		};
 	} else {
 		[_handle] call CBA_fnc_removePerFrameHandler;
+		_vehicle setVariable ["HELICOPTER_TURBULENCE_READY", nil];
+		_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_FORCE", nil];
+		_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_CENTRE", nil];
 	};
 },  
 0

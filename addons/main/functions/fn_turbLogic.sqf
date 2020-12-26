@@ -1,20 +1,20 @@
 /*
  * Author: Seb
- * Should not be called by itself. See HT_fnc_turbulence instead.
+ * Should not be called by itself. See Helicopter_Turbulence_fnc_turbulence instead.
 
  * Example:
- * vehicle call HT_fnc_turbulence;
+ * vehicle call Helicopter_Turbulence_fnc_turbulence;
  *
  * Public: No
  */
 params ["_vehicle", "_dimensions", "_surfaceArea"];
-_vehicle setVariable ["TURBULENCE_READY", false];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_READY", false];
 // if weather effect is enabled in settings, easeIn to windiness value so that lower windiness/gustiness values have less of an effect.
-private _windiness = [0, [0, 1, (windStr+overcast)/2] call BIS_fnc_easeIn] select TURBULENCE_ENABLE_WEATHEREFFECT;
+private _windiness = [0, [0, 1, (windStr+overcast)/2] call BIS_fnc_easeIn] select HELICOPTER_TURBULENCE_ENABLE_WEATHEREFFECT;
 // 30 = 30m/s max windspeed at max rain and overcast
-private _maxWindSpeed = (_windiness*TURBULENCE_MAX_TURBULENCE)+TURBULENCE_MIN_TURBULENCE;
+private _maxWindSpeed = (_windiness*HELICOPTER_TURBULENCE_MAX_TURBULENCE)+HELICOPTER_TURBULENCE_MIN_TURBULENCE;
 // easeIn is more likely to select a low value, so big gusts are rare
-private _gustSpeed = [TURBULENCE_MIN_TURBULENCE, _maxWindSpeed, random(1)] call BIS_fnc_easeIn;
+private _gustSpeed = [HELICOPTER_TURBULENCE_MIN_TURBULENCE, _maxWindSpeed, random(1)] call BIS_fnc_easeIn;
 
 // as it gets windier, the minimum gust length decreases so you can get more short sharp jerks
 private _minGustLength = [0.6, 0.4, _windiness] call BIS_fnc_lerp;
@@ -32,22 +32,9 @@ private _turbulenceCentre  = _dimensions apply {(random(_x)-(_x/2))};
 private _force = [_gustForceScalar, random(360), random(360)] call CBA_fnc_polar2Vect;
     
 // old forces used for interpolation
-private _oldForce = _vehicle getVariable "TURBULENCE_OLD_FORCE";
-private _oldCentre = _vehicle getVariable "TURBULENCE_OLD_CENTRE";
+private _oldForce = _vehicle getVariable "HELICOPTER_TURBULENCE_OLD_FORCE";
+private _oldCentre = _vehicle getVariable "HELICOPTER_TURBULENCE_OLD_CENTRE";
 
-/*/ DEBUG
-if (isNull TURBULENCE_DEBUG_STARTED) then {
-    TURBULENCE_DEBUG_ARRAY_ALL = [];
-    TURBULENCE_DEBUG_STARTED = true;
-    TURBULENCE_DEBUG_TIME = 0;
-};
-TURBULENCE_DEBUG_TIME = TURBULENCE_DEBUG_TIME + _gustLength;
-private _surfaceAreaToMassRatio = _surfaceArea/(getmass _vehicle);
-private _DebugArrayThisLoop = [TURBULENCE_DEBUG_TIME, _gustLength, _surfaceAreaToMassRatio, _windiness, _force, _turbulenceCentre,_gustForceScalar];
-systemchat str _DebugArrayThisLoop;
-TURBULENCE_DEBUG_ARRAY_ALL pushback _DebugArrayThisLoop;
-copyToClipboard str TURBULENCE_DEBUG_ARRAY_ALL;
-/**/
 // waitAndExecute queues all the physics updates based on t/gust length.
 if (!isGamePaused && !difficultyEnabledRTD && isEngineOn _vehicle) then {    
         for "_i" from 0 to _gustLength step 0.05 do {
@@ -64,10 +51,10 @@ if (!isGamePaused && !difficultyEnabledRTD && isEngineOn _vehicle) then {
     };
 };
 // set old forces for next interpolation loop
-_vehicle setVariable ["TURBULENCE_OLD_FORCE", _force];
-_vehicle setVariable ["TURBULENCE_OLD_CENTRE", _turbulenceCentre];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_FORCE", _force];
+_vehicle setVariable ["HELICOPTER_TURBULENCE_OLD_CENTRE", _turbulenceCentre];
 // set turbulence stage to 1 after the turbulence is over for next loop
 [{
     params ["_vehicle"];
-    _vehicle setVariable ["TURBULENCE_READY", true];
+    _vehicle setVariable ["HELICOPTER_TURBULENCE_READY", true];
 }, [_vehicle], _gustLength] call CBA_fnc_waitandExecute;
