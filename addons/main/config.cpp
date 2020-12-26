@@ -13,7 +13,7 @@ class CfgPatches {
 };
 
 class CfgFunctions {
-    class Aircraft_Turbulence {
+    class Helicopter_Turbulence {
         class Helicopter_Turbulence {
             file = "z\Helicopter_Turbulence\addons\main\functions";
             class turbulence {};
