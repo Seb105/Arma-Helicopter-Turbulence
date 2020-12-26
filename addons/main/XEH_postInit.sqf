@@ -2,22 +2,16 @@
 0 spawn {
 	if (!hasInterface) exitWith {};
 	waitUntil {!isNull player};
-	// checks if experimental plane feature is enabled. Adds for all Air if true, just Helos and VTOLs if false.
-	if (TURBULENCE_ENABLE_PLANES) then {
-		["Air", "InitPost", {
-			_this call HT_fnc_turbulence;
-		},true,[],true] call CBA_fnc_addClassEventHandler;
-	
+	// if controlled vehicle changes
+	["vehicle", {
+		params ["_unit", "_newVehicle", "_oldVehicle"];
+		if (_newVehicle isKindOf "VTOL_Base_F" OR _newVehicle isKindOf "Helicopter") then {
+			_newVehicle call Helicopter_Turbulence_fnc_turbulence;
+		};
+	}] call CBA_fnc_addPlayerEventHandler;
 
-	} else {
-
-		["VTOL_Base_F", "InitPost", {
-			_this call HT_fnc_turbulence;
-		},true,[],true] call CBA_fnc_addClassEventHandler;
-
-		["Helicopter", "InitPost", {
-			_this call HT_fnc_turbulence;
-		},true,[],true] call CBA_fnc_addClassEventHandler;
-
+	// if player starts in vehicle
+	if ((vehicle player) isKindof "VTOL_Base_F" OR (vehicle player) isKindof "Helicopter") then {
+		(vehicle player) call Helicopter_Turbulence_fnc_turbulence;
 	};
 };

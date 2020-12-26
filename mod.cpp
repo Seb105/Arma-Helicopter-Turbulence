@@ -1,5 +1,5 @@
 name = "Helicopter Turbulence";
-dir = "@HT";
+dir = "@Helicopter_Turbulence";
 author = "Seb";
 actionName = "Website";
 action = "http://www.carpenoctem.co";

@@ -1,5 +1,5 @@
 #define MAINPREFIX z
-#define PREFIX HT
+#define PREFIX Helicopter_Turbulence
 
 #include "script_version.hpp"
 
