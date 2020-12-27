@@ -5,7 +5,7 @@
 	// if controlled vehicle changes
 	["vehicle", {
 		params ["_unit", "_newVehicle", "_oldVehicle"];
-		if ((_newVehicle isKindOf "VTOL_Base_F") OR (_newVehicle isKindOf "Helicopter")) then {
+		if (_newVehicle isKindOf "Helicopter") then {
 			_newVehicle call Helicopter_Turbulence_fnc_turbulence;
 		};
 	}] call CBA_fnc_addPlayerEventHandler;
@@ -13,7 +13,7 @@
 	// if player starts in vehicle
 	private _currentUnit = call CBA_fnc_currentUnit;
 	private _controlledVehicle = vehicle _currentUnit;
-	if ((_controlledVehicle isKindof "VTOL_Base_F") OR (_controlledVehicle isKindof "Helicopter")) then {
+	if (_controlledVehicle isKindof "Helicopter") then {
 		_controlledVehicle call Helicopter_Turbulence_fnc_turbulence;
 	};
 };
